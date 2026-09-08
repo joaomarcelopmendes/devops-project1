@@ -1,0 +1,21 @@
+name: CI/CD Pipeline
+on: 
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Simular Build
+      run: echo "Build finalizado com sucesso"
+
+  implantar:
+    needs: construir
+    runs-on: ubuntu-latest
+    steps:
+    - name: Simular Deploy
+      run: echo "Deploy finalizado com sucesso"
