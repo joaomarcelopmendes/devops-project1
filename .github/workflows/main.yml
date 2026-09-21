@@ -1,11 +1,13 @@
 name: CI/CD Pipeline
 
 on:
+  push:
+    branches: [ main, "feature/*" ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  testes:
+  testes-e-alertas:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout do código
@@ -19,5 +21,8 @@ jobs:
       - name: Executar Testes Unitários
         run: python -m unittest test_main.py
 
-      # Atenção: Se você fez a atividade da Semana 6 (Alertas), 
-      # cole o código do seu alerta (Slack, Email, etc.) logo aqui abaixo!
+      - name: Enviar alerta para o Discord
+        run: |
+          curl -H "Content-Type: application/json" \
+          -d '{"content": "🚀 Alerta DevOps: Um novo commit ou PR foi processado pelo GitHub Actions!"}' \
+          ${{ secrets.DISCORD_WEBHOOK }}
