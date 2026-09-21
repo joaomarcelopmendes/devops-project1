@@ -1,21 +1,28 @@
 name: CI/CD Pipeline
-on: 
+
+on:
   push:
-    branches: [ "main" ]
+    branches: [ main, "feature/*" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-  construir:
+  testes-e-alertas:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Simular Build
-      run: echo "Build finalizado com sucesso"
+      - name: Checkout do código
+        uses: actions/checkout@v3
 
-  implantar:
-    needs: construir
-    runs-on: ubuntu-latest
-    steps:
-    - name: Simular Deploy
-      run: echo "Deploy finalizado com sucesso"
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Executar Testes Unitários
+        run: python -m unittest test_main.py
+
+      - name: Enviar alerta para o Discord
+        run: |
+          curl -H "Content-Type: application/json" \
+          -d '{"content": "🚀 Alerta DevOps: Um novo commit ou PR foi processado pelo GitHub Actions!"}' \
+          ${{ secrets.DISCORD_WEBHOOK }}
