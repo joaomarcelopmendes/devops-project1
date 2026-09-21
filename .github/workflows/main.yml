@@ -1,21 +1,23 @@
 name: CI/CD Pipeline
-on: 
-  push:
-    branches: [ "main" ]
+
+on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-  construir:
+  testes:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Simular Build
-      run: echo "Build finalizado com sucesso"
+      - name: Checkout do código
+        uses: actions/checkout@v3
 
-  implantar:
-    needs: construir
-    runs-on: ubuntu-latest
-    steps:
-    - name: Simular Deploy
-      run: echo "Deploy finalizado com sucesso"
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Executar Testes Unitários
+        run: python -m unittest test_main.py
+
+      # Atenção: Se você fez a atividade da Semana 6 (Alertas), 
+      # cole o código do seu alerta (Slack, Email, etc.) logo aqui abaixo!
